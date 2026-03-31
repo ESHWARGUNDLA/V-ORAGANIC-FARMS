@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>V-ORGANIC FARMS — Premium Oyster Mushrooms</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Outfit:wght@200;300;400;500;600;700&family=Italiana&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<style>
+:root{
+  /* CLASSIC WARM EARTHY PALETTE */
+  --bg:#1a1208;
+  --bg2:#221808;
+  --bg3:#2a1e0a;
+  --surface:rgba(255,248,220,0.04);
+  --surface2:rgba(255,248,220,0.08);
+  --accent:#7c3e0e;
+  --accent2:#9e5012;
+  --accent3:#c46a20;
+  --gold:#c8922a;
+  --gold2:#e0aa40;
+  --gold3:#f5cc70;
+  --gold4:rgba(200,146,42,0.15);
+  --green:#3d5c2a;
+  --green2:#4e7535;
+  --green3:#6a9c47;
+  --cream:#fdf6e3;
+  --white:#fef9f0;
+  --soft:rgba(253,246,227,0.65);
+  --muted:rgba(253,246,227,0.38);
+  --border:rgba(200,146,42,0.22);
+  --border2:rgba(255,248,220,0.1);
+  --shadow:rgba(124,62,14,0.25);
+  --glow:rgba(200,146,42,0.14);
+  --r1:2px;--r2:8px;--r3:16px;--r4:24px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:'Outfit',sans-serif;color:var(--white);overflow-x:hidden;cursor:none;}
+
+/* ─── CUSTOM CURSOR ─── */
+#cursor{position:fixed;width:12px;height:12px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .1s,width .3s,height .3s,background .3s;mix-blend-mode:normal;}
+#cursor-trail{position:fixed;width:38px;height:38px;border:1px solid rgba(200,146,42,0.4);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .12s ease,top .12s ease,width .3s,height .3s;}
+@media(max-width:768px){#cursor,#cursor-trail{display:none;}body{cursor:auto;}}
+
+/* ─── MUSHROOM CANVAS BACKGROUND ─── */
+#mushroomCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.45;}
+
+/* ─── GRAIN OVERLAY ─── */
+body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:1;}
+
+/* ─── LOADER ─── */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:99997;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.loader-content{position:relative;z-index:2;text-align:center;}
+.loader-mushroom{font-size:4rem;animation:mushroomBounce 1s ease-in-out infinite alternate;display:block;margin-bottom:16px;}
+@keyframes mushroomBounce{0%{transform:translateY(0) scale(1);}100%{transform:translateY(-14px) scale(1.08);}}
+.loader-logo{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,7vw,5rem);font-weight:400;color:var(--white);letter-spacing:.05em;opacity:0;animation:fadeUp .8s .6s forwards;line-height:1.1;}
+.loader-logo em{font-style:italic;color:var(--gold);}
+.loader-sub{font-family:'Italiana',serif;font-size:1rem;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeUp .6s 1s forwards;margin-top:6px;}
+.loader-line{width:1px;height:0;background:linear-gradient(180deg,var(--gold),transparent);margin:28px auto 0;animation:lineGrow 1.6s 1.2s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes lineGrow{to{height:70px;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+#loader.exit{animation:loaderExit .85s .1s cubic-bezier(.76,0,.24,1) forwards;}
+@keyframes loaderExit{to{transform:translateY(-100%);opacity:0;}}
+
+/* ─── NAVBAR ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;padding:0 5%;height:72px;display:flex;align-items:center;justify-content:space-between;transition:all .5s;}
+nav.scrolled{background:rgba(26,18,8,0.94);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:400;color:var(--white);letter-spacing:.04em;text-decoration:none;display:flex;align-items:center;gap:8px;}
+.nav-logo em{font-style:italic;color:var(--gold);}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none;}
+.nav-links a{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;font-weight:400;transition:color .3s;position:relative;padding-bottom:4px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1);}
+.nav-links a:hover{color:var(--white);}
+.nav-links a:hover::after{width:100%;}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-cta{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:9px 22px;font-family:'Outfit',sans-serif;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;cursor:pointer;transition:all .35s;border-radius:1px;}
+.nav-cta:hover{background:var(--gold);color:var(--bg);}
+.cart-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border2);color:var(--soft);padding:9px 16px;font-family:'Outfit',sans-serif;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:all .3s;border-radius:1px;}
+.cart-btn:hover{border-color:var(--gold);color:var(--gold);}
+.cart-count{background:var(--accent2);color:white;width:18px;height:18px;border-radius:50%;font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1px;background:var(--gold);transition:all .35s;}
+
+/* ─── MOBILE MENU ─── */
+.mob-menu{position:fixed;inset:0;z-index:890;background:rgba(26,18,8,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;opacity:0;pointer-events:none;transition:opacity .4s;}
+.mob-menu.open{opacity:1;pointer-events:all;}
+.mob-menu a{font-family:'Playfair Display',serif;font-size:clamp(2rem,6vw,3.4rem);font-weight:400;color:var(--white);text-decoration:none;letter-spacing:.04em;transition:color .3s;}
+.mob-menu a:hover{color:var(--gold);}
+.mob-menu-close{position:absolute;top:24px;right:24px;background:none;border:1px solid var(--border2);color:var(--muted);width:40px;height:40px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* ─── HERO ─── */
+#hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:130px 5% 90px;}
+.hero-bg-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 70% 40%,rgba(200,146,42,0.07),transparent 70%),radial-gradient(ellipse 45% 55% at 20% 60%,rgba(124,62,14,0.07),transparent 70%);}
+.hero-grid-lines{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(200,146,42,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,146,42,0.04) 1px,transparent 1px);background-size:80px 80px;}
+
+.hero-content{position:relative;z-index:5;max-width:680px;width:100%;}
+.hero-chip{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--border);background:var(--surface);padding:7px 16px;border-radius:40px;font-size:.63rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:36px;opacity:0;animation:fadeUp .7s 3.4s forwards;}
+.hero-chip::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 10px var(--gold);}
+h1.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(3rem,7.5vw,6.8rem);font-weight:400;line-height:1.02;letter-spacing:-.02em;color:var(--white);opacity:0;animation:fadeUp .9s 3.6s forwards;}
+h1.hero-h1 em{font-style:italic;color:var(--gold);}
+h1.hero-h1 .line3{display:block;font-family:'Italiana',serif;font-size:.82em;color:var(--accent3);letter-spacing:.05em;}
+.hero-desc{font-size:.95rem;font-weight:300;color:var(--soft);line-height:1.9;max-width:460px;margin:26px 0 44px;opacity:0;animation:fadeUp .7s 3.9s forwards;}
+.hero-btns{display:flex;align-items:center;gap:18px;flex-wrap:wrap;opacity:0;animation:fadeUp .7s 4.1s forwards;}
+.btn-hero{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;padding:16px 40px;border:none;font-family:'Outfit',sans-serif;font-size:.73rem;letter-spacing:.28em;text-transform:uppercase;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all .4s;position:relative;overflow:hidden;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.btn-hero:hover{transform:translateY(-3px);box-shadow:0 22px 55px rgba(124,62,14,0.42);}
+.btn-ghost{color:var(--gold);font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;font-weight:500;display:inline-flex;align-items:center;gap:10px;transition:all .3s;padding-bottom:2px;border-bottom:1px solid rgba(200,146,42,0.3);}
+.btn-ghost:hover{gap:16px;color:var(--white);border-bottom-color:var(--white);}
+
+.hero-stats{display:flex;gap:0;margin-top:60px;opacity:0;animation:fadeUp .7s 4.3s forwards;}
+.stat-item{flex:1;padding:24px 28px;border:1px solid var(--border);position:relative;transition:background .4s;}
+.stat-item:first-child{border-radius:4px 0 0 4px;}
+.stat-item:last-child{border-radius:0 4px 4px 0;}
+.stat-item:not(:first-child){border-left:none;}
+.stat-item:hover{background:var(--surface);}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:400;color:var(--gold);line-height:1;}
+.stat-label{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:5px;}
+
+.hero-img-panel{position:absolute;right:0;top:0;bottom:0;width:42%;pointer-events:none;overflow:hidden;}
+.hero-img-panel img{width:100%;height:100%;object-fit:cover;opacity:0;animation:revealImg 1.4s 3.5s forwards;filter:saturate(1.1);}
+.hero-img-panel::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 42%,transparent 58%,var(--bg) 100%);z-index:2;}
+.hero-img-panel::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,transparent 20%,transparent 80%,var(--bg) 100%);z-index:2;}
+@keyframes revealImg{to{opacity:.32;}}
+
+/* ─── MARQUEE ─── */
+.marquee-wrap{background:transparent;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:13px 0;overflow:hidden;position:relative;z-index:5;}
+.marquee-track{display:flex;width:max-content;animation:marquee 28s linear infinite;}
+.marquee-item{font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;color:var(--muted);white-space:nowrap;padding:0 48px;display:flex;align-items:center;gap:0;}
+.marquee-item .dot{width:3px;height:3px;background:var(--gold);border-radius:50%;margin-right:48px;box-shadow:0 0 6px var(--gold);}
+@keyframes marquee{to{transform:translateX(-50%);}}
+
+/* ─── SECTION UTILS ─── */
+.section{padding:110px 5%;position:relative;z-index:5;}
+.eyebrow{font-size:.6rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+.eyebrow::before{content:'';width:28px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4.5vw,4.2rem);font-weight:400;line-height:1.1;color:var(--white);margin-bottom:18px;}
+.section-title em{font-style:italic;color:var(--gold);}
+.section-desc{font-size:.9rem;font-weight:300;color:var(--soft);line-height:2;max-width:470px;}
+.gold-line{width:36px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:20px 0 40px;}
+
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.4,0,.2,1),transform .9s cubic-bezier(.4,0,.2,1);}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-l{opacity:0;transform:translateX(-36px);transition:opacity .9s .1s cubic-bezier(.4,0,.2,1),transform .9s .1s cubic-bezier(.4,0,.2,1);}
+.reveal-l.visible{opacity:1;transform:none;}
+.reveal-r{opacity:0;transform:translateX(36px);transition:opacity .9s .15s cubic-bezier(.4,0,.2,1),transform .9s .15s cubic-bezier(.4,0,.2,1);}
+.reveal-r.visible{opacity:1;transform:none;}
+
+/* ─── WHY ─── */
+#why{padding:110px 5%;}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;}
+.why-img-wrap{position:relative;}
+.why-img-frame{position:relative;padding:3px;background:linear-gradient(135deg,var(--gold),rgba(200,146,42,0.1),var(--gold));border-radius:3px;}
+.why-img{width:100%;height:520px;object-fit:cover;border-radius:2px;display:block;}
+.why-stat-badge{position:absolute;bottom:-22px;right:-22px;background:var(--bg2);border:1px solid var(--border);padding:20px 24px;display:flex;gap:14px;align-items:center;}
+.wsb-num{font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--gold);line-height:1;}
+.wsb-info{font-size:.63rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+.why-corner{position:absolute;top:-14px;left:-14px;width:44px;height:44px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);}
+
+.why-feats{display:flex;flex-direction:column;gap:1px;margin-top:40px;}
+.why-feat{display:flex;align-items:flex-start;gap:18px;padding:20px 22px;border:1px solid var(--border2);background:var(--surface);transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;}
+.why-feat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),var(--accent));transform:scaleY(0);transform-origin:bottom;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+.why-feat:first-child{border-radius:4px 4px 0 0;}
+.why-feat:last-child{border-radius:0 0 4px 4px;}
+.why-feat:not(:last-child){border-bottom:none;}
+.why-feat:hover{background:var(--surface2);transform:translateX(6px);}
+.why-feat:hover::before{transform:scaleY(1);}
+.feat-icon{width:42px;height:42px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.feat-text h4{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:400;color:var(--white);margin-bottom:3px;}
+.feat-text p{font-size:.76rem;color:var(--muted);line-height:1.7;font-weight:300;}
+
+/* ─── PRODUCTS ─── */
+#products{background:var(--bg2);}
+.products-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px;flex-wrap:wrap;gap:18px;}
+.filter-row{display:flex;gap:0;border:1px solid var(--border2);flex-wrap:wrap;}
+.filter-tab{padding:9px 20px;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;font-family:'Outfit',sans-serif;font-weight:500;cursor:pointer;transition:all .3s;border:none;background:transparent;color:var(--muted);}
+.filter-tab:not(:last-child){border-right:1px solid var(--border2);}
+.filter-tab.active{background:var(--gold);color:var(--bg);font-weight:600;}
+.filter-tab:hover:not(.active){color:var(--gold);background:var(--surface);}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1px;background:var(--border2);}
+
+.product-card{background:var(--bg);overflow:hidden;cursor:pointer;transition:all .5s cubic-bezier(.4,0,.2,1);position:relative;}
+.product-card:hover{transform:translateY(-6px);z-index:10;box-shadow:0 36px 70px rgba(0,0,0,.55),0 0 50px rgba(200,146,42,0.07);}
+.product-img-wrap{position:relative;overflow:hidden;height:230px;}
+.product-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.4,0,.2,1);}
+.product-card:hover .product-img-wrap img{transform:scale(1.1);}
+.product-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(26,18,8,.95) 100%);}
+.product-badge{position:absolute;top:14px;right:0;background:var(--accent);color:white;padding:5px 12px 5px 9px;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600;clip-path:polygon(8px 0%,100% 0%,100% 100%,0% 100%);z-index:2;}
+.product-badge.gold-badge{background:var(--gold);color:var(--bg);}
+.product-overlay-btn{position:absolute;bottom:16px;left:50%;transform:translateX(-50%) translateY(55px);opacity:0;transition:all .4s cubic-bezier(.4,0,.2,1);white-space:nowrap;z-index:3;}
+.product-card:hover .product-overlay-btn{transform:translateX(-50%) translateY(0);opacity:1;}
+.quick-add{padding:9px 22px;background:rgba(253,246,227,.95);border:none;font-family:'Outfit',sans-serif;font-size:.63rem;letter-spacing:.25em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;transition:all .3s;clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));}
+.quick-add:hover{background:var(--accent);color:white;}
+.product-info{padding:22px;}
+.product-cat{font-size:.56rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:7px;}
+.product-name{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:400;color:var(--white);margin-bottom:7px;}
+.product-desc{font-size:.74rem;color:var(--muted);line-height:1.75;margin-bottom:18px;}
+.product-footer{display:flex;align-items:center;justify-content:space-between;}
+.product-price{font-family:'Playfair Display',serif;font-size:1.45rem;color:var(--gold);}
+.product-price span{font-size:.68rem;color:var(--muted);font-family:'Outfit',sans-serif;}
+.product-rating{font-size:.66rem;color:var(--muted);margin-top:2px;}
+.product-rating .stars{color:var(--gold2);letter-spacing:1px;}
+.add-btn{width:38px;height:38px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold);font-size:1rem;transition:all .35s;}
+.add-btn:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);}
+
+/* ─── PROCESS ─── */
+#process{background:var(--bg);}
+.process-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border2);margin-top:65px;}
+.process-step{background:var(--bg);padding:44px 28px;position:relative;overflow:hidden;transition:all .4s;border-bottom:2px solid transparent;}
+.process-step:hover{background:var(--bg2);border-bottom-color:var(--gold);}
+.ps-num{font-family:'Playfair Display',serif;font-size:5.5rem;font-weight:900;color:rgba(200,146,42,0.06);line-height:1;position:absolute;top:8px;right:12px;transition:color .4s;}
+.process-step:hover .ps-num{color:rgba(200,146,42,0.1);}
+.ps-icon{font-size:1.9rem;margin-bottom:20px;}
+.ps-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:400;color:var(--white);margin-bottom:10px;}
+.ps-desc{font-size:.76rem;color:var(--muted);line-height:1.85;font-weight:300;}
+.ps-line{width:22px;height:1px;background:var(--gold);margin-bottom:20px;transform:scaleX(0);transform-origin:left;transition:transform .4s .1s;}
+.process-step:hover .ps-line{transform:scaleX(1);}
+
+/* ─── BENEFITS ─── */
+#benefits{background:var(--bg2);}
+.benefits-grid{display:grid;grid-template-columns:1fr 1fr;gap:75px;align-items:center;}
+.benefit-list{display:flex;flex-direction:column;gap:1px;}
+.benefit-item{display:flex;align-items:flex-start;gap:18px;padding:22px;background:var(--bg);border-left:2px solid transparent;transition:all .4s;}
+.benefit-item:hover{border-left-color:var(--gold);background:var(--bg3);transform:translateX(7px);}
+.bi-icon{width:48px;height:48px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.bi-text h4{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:400;color:var(--white);margin-bottom:5px;}
+.bi-text p{font-size:.76rem;color:var(--muted);line-height:1.75;font-weight:300;}
+
+.benefits-visual{display:flex;align-items:center;justify-content:center;}
+.hex-container{position:relative;width:340px;height:340px;}
+.hex-ring{position:absolute;inset:0;border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:hexSpin 20s linear infinite;}
+.hex-ring:nth-child(2){width:70%;height:70%;inset:15%;border-style:dashed;border-color:rgba(200,146,42,0.2);animation-direction:reverse;animation-duration:14s;}
+.hex-ring:nth-child(3){width:42%;height:42%;inset:29%;border-color:rgba(124,62,14,0.35);animation-duration:8s;}
+.hex-core{position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle,rgba(200,146,42,0.14),transparent);display:flex;align-items:center;justify-content:center;flex-direction:column;border:1px solid var(--border);}
+.hc-num{font-family:'Playfair Display',serif;font-size:2.4rem;color:var(--gold);}
+.hc-label{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.hex-dot{position:absolute;width:8px;height:8px;background:var(--gold);border-radius:50%;top:-4px;left:50%;transform:translateX(-50%);box-shadow:0 0 12px var(--gold);}
+@keyframes hexSpin{to{transform:rotate(360deg);}}
+
+/* ─── TESTIMONIALS ─── */
+#testimonials{background:var(--bg3);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border2);margin-top:56px;}
+.testi-card{background:var(--bg);padding:36px 30px;transition:all .4s;position:relative;overflow:hidden;}
+.testi-card:hover{background:var(--bg2);}
+.testi-stars{color:var(--gold2);letter-spacing:2px;font-size:.76rem;margin-bottom:14px;}
+.testi-q{font-family:'Playfair Display',serif;font-size:3.6rem;color:rgba(200,146,42,0.14);line-height:.7;margin-bottom:14px;}
+.testi-text{font-size:.84rem;color:var(--muted);line-height:1.9;font-style:italic;margin-bottom:26px;}
+.testi-author{display:flex;align-items:center;gap:12px;padding-top:22px;border-top:1px solid var(--border2);}
+.testi-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.15rem;color:white;}
+.testi-name{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--white);}
+.testi-role{font-size:.6rem;letter-spacing:.13em;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+
+/* ─── ORDER ─── */
+#order{background:var(--bg2);}
+.order-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:75px;align-items:start;}
+.dc-list{display:flex;flex-direction:column;gap:1px;}
+.dc-item{display:flex;align-items:flex-start;gap:18px;padding:22px;background:var(--bg);border-left:2px solid transparent;transition:all .4s;}
+.dc-item:hover{border-left-color:var(--accent2);background:var(--bg3);}
+.dc-ico{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:1.05rem;flex-shrink:0;}
+.dc-text h4{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:400;color:var(--white);margin-bottom:3px;}
+.dc-text p{font-size:.74rem;color:var(--muted);line-height:1.65;}
+
+.order-form{background:var(--bg);border:1px solid var(--border);padding:44px 38px;}
+.form-title{font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--white);margin-bottom:5px;}
+.form-sub{font-size:.74rem;color:var(--muted);margin-bottom:32px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group.full{grid-column:span 2;}
+.form-label{font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:500;}
+.form-input,.form-select,.form-textarea{padding:12px 15px;background:var(--surface);border:1px solid var(--border2);font-family:'Outfit',sans-serif;font-size:.86rem;color:var(--white);outline:none;transition:all .3s;}
+.form-input::placeholder,.form-textarea::placeholder{color:var(--muted);}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold);background:var(--surface2);}
+.form-select{color:var(--soft);}
+.form-select option{background:var(--bg2);color:var(--white);}
+.form-textarea{resize:vertical;min-height:90px;}
+.form-submit{width:100%;margin-top:10px;padding:17px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .35s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));}
+.form-submit:hover{transform:translateY(-2px);box-shadow:0 18px 45px rgba(124,62,14,0.42);}
+.form-note{font-size:.66rem;color:var(--muted);text-align:center;margin-top:10px;}
+
+/* ─── NEWSLETTER ─── */
+#newsletter{background:linear-gradient(135deg,#120c04,#1e1208,#120c04);padding:90px 5%;text-align:center;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.nl-eyebrow{font-size:.58rem;letter-spacing:.46em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;}
+.nl-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.6rem);color:var(--white);margin-bottom:12px;}
+.nl-title em{font-style:italic;color:var(--gold);}
+.nl-sub{font-size:.88rem;color:var(--muted);margin-bottom:40px;font-weight:300;}
+.nl-form{display:flex;max-width:460px;margin:0 auto;border:1px solid var(--border);}
+.nl-input{flex:1;padding:15px 20px;background:transparent;border:none;outline:none;font-family:'Outfit',sans-serif;font-size:.86rem;color:var(--white);}
+.nl-input::placeholder{color:var(--muted);}
+.nl-btn{background:var(--gold);color:var(--bg);border:none;padding:15px 26px;font-family:'Outfit',sans-serif;font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .3s;white-space:nowrap;}
+.nl-btn:hover{background:var(--gold3);}
+
+/* ─── SOCIAL ─── */
+#social-section{background:var(--bg);padding:65px 5%;text-align:center;border-bottom:1px solid var(--border);}
+.social-label{font-size:.56rem;letter-spacing:.5em;text-transform:uppercase;color:var(--muted);margin-bottom:28px;}
+.social-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;}
+.soc-link{display:flex;align-items:center;gap:9px;padding:11px 22px;border:1px solid var(--border2);color:var(--muted);text-decoration:none;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500;transition:all .35s;position:relative;overflow:hidden;}
+.soc-link::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .35s;}
+.soc-link:hover{color:white;transform:translateY(-3px);border-color:transparent;}
+.soc-link.fb::before{background:linear-gradient(135deg,#1877f2,#0d5fc4);}
+.soc-link.ig::before{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366);}
+.soc-link.yt::before{background:linear-gradient(135deg,#ff0000,#cc0000);}
+.soc-link.wa::before{background:linear-gradient(135deg,#25d366,#128c7e);}
+.soc-link.tw::before{background:linear-gradient(135deg,#1da1f2,#0d8cd9);}
+.soc-ico{font-size:1.05rem;position:relative;z-index:1;}
+.soc-name{position:relative;z-index:1;}
+
+/* ─── FOOTER ─── */
+footer{background:var(--bg);padding:75px 5% 36px;border-top:1px solid var(--border2);}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:55px;margin-bottom:55px;}
+.footer-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--white);margin-bottom:14px;}
+.footer-logo em{font-style:italic;color:var(--gold);}
+.footer-about{font-size:.76rem;color:var(--muted);line-height:1.9;max-width:250px;margin-bottom:24px;}
+.footer-social{display:flex;gap:7px;}
+.footer-soc{width:34px;height:34px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.82rem;transition:all .3s;cursor:pointer;text-decoration:none;}
+.footer-soc:hover{background:var(--accent);color:white;border-color:var(--accent);}
+.footer-col h5{font-size:.56rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.footer-col ul a{font-size:.76rem;color:var(--muted);text-decoration:none;transition:color .3s;font-weight:300;cursor:pointer;}
+.footer-col ul a:hover{color:var(--white);}
+.footer-bottom{border-top:1px solid var(--border2);padding-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.footer-copy{font-size:.63rem;color:var(--muted);}
+.footer-tagline{font-family:'Playfair Display',serif;font-style:italic;font-size:.82rem;color:rgba(200,146,42,0.38);}
+
+/* ─── CART DRAWER ─── */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:800;opacity:0;pointer-events:none;transition:opacity .4s;}
+.cart-overlay.open{opacity:1;pointer-events:all;}
+.cart-drawer{position:fixed;top:0;right:-480px;width:460px;height:100vh;background:var(--bg2);z-index:801;transition:right .5s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;border-left:1px solid var(--border);}
+.cart-drawer.open{right:0;}
+.cart-hdr{padding:26px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;}
+.cart-hdr h3{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white);}
+.cart-close-btn{background:none;border:1px solid var(--border2);width:34px;height:34px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.cart-close-btn:hover{background:var(--accent);color:white;border-color:var(--accent);}
+.cart-items{flex:1;overflow-y:auto;padding:18px 26px;}
+.cart-item{display:flex;gap:12px;padding:16px 0;border-bottom:1px solid var(--border2);}
+.ci-img{width:64px;height:64px;object-fit:cover;flex-shrink:0;}
+.ci-info{flex:1;}
+.ci-name{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--white);}
+.ci-price{font-size:.76rem;color:var(--gold);margin-top:2px;}
+.ci-qty{display:flex;align-items:center;gap:9px;margin-top:9px;}
+.qty-btn{width:24px;height:24px;background:var(--surface);border:1px solid var(--border2);cursor:pointer;color:var(--gold);font-size:.82rem;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.qty-btn:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);}
+.qty-num{font-size:.86rem;color:var(--white);min-width:20px;text-align:center;}
+.ci-remove{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.78rem;align-self:flex-start;transition:color .3s;padding:3px;}
+.ci-remove:hover{color:var(--accent);}
+.cart-ftr{padding:18px 26px 26px;border-top:1px solid var(--border2);}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.ct-lbl{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+.ct-amt{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--white);}
+.checkout-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .35s;}
+.checkout-btn:hover{box-shadow:0 18px 44px rgba(124,62,14,0.42);}
+.cart-empty{text-align:center;padding:55px 0;font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--muted);font-style:italic;}
+
+/* ─── PAYMENT MODAL ─── */
+.pay-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;padding:16px;}
+.pay-overlay.open{opacity:1;pointer-events:all;}
+.pay-modal{background:var(--bg2);border:1px solid var(--border);width:100%;max-width:540px;max-height:94vh;overflow-y:auto;box-shadow:0 70px 140px rgba(0,0,0,.55);transform:translateY(28px) scale(.97);transition:transform .5s cubic-bezier(.4,0,.2,1);}
+.pay-overlay.open .pay-modal{transform:none;}
+.pay-head{background:var(--bg);padding:24px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.pay-title{font-family:'Playfair Display',serif;font-size:1.45rem;color:var(--white);}
+.pay-title em{font-style:italic;color:var(--gold);}
+.pay-head-right{display:flex;align-items:center;gap:9px;}
+.ssl-badge{display:flex;align-items:center;gap:5px;border:1px solid var(--border2);padding:4px 10px;font-size:.6rem;color:var(--muted);letter-spacing:.08em;}
+.pay-close{background:none;border:1px solid var(--border2);width:30px;height:30px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.pay-close:hover{background:var(--accent);color:white;border-color:var(--accent);}
+.pay-summary{background:linear-gradient(135deg,rgba(200,146,42,0.08),rgba(124,62,14,0.06));padding:18px 32px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;}
+.psm-lbl{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);}
+.psm-amt{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--gold);}
+.psm-items{font-size:.7rem;color:var(--muted);max-width:55%;text-align:right;line-height:1.5;}
+.pay-body{padding:26px 32px;}
+/* Customer info row in payment */
+.pay-cust-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.pay-cust-field{display:flex;flex-direction:column;gap:5px;}
+.pay-cust-label{font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);}
+.pay-cust-input{padding:11px 14px;background:var(--surface);border:1px solid var(--border2);font-family:'Outfit',sans-serif;font-size:.84rem;color:var(--white);outline:none;transition:border .3s;}
+.pay-cust-input:focus{border-color:var(--gold);}
+.pay-cust-input::placeholder{color:var(--muted);}
+.pay-cust-full{grid-column:span 2;}
+.pay-cinfo{background:var(--surface);border:1px solid var(--border2);padding:12px 16px;margin-bottom:20px;}
+.pci-row{font-size:.78rem;color:var(--muted);margin-bottom:4px;}
+.pci-row:last-child{margin-bottom:0;}
+.pci-row span{color:var(--white);font-weight:500;}
+.pay-method-lbl{font-size:.58rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:9px;}
+.pay-method-lbl::before{content:'';width:16px;height:1px;background:var(--gold);}
+.pay-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:20px;}
+.pay-tab{border:1px solid var(--border2);padding:14px 9px;text-align:center;cursor:pointer;transition:all .3s;background:var(--surface);position:relative;}
+.pay-tab:hover{border-color:var(--gold);}
+.pay-tab.active{border-color:var(--gold);background:var(--gold4);}
+.pay-tab.active::after{content:'✓';position:absolute;top:6px;right:8px;font-size:.56rem;color:var(--gold);}
+.pt-icon{font-size:1.4rem;margin-bottom:5px;}
+.pt-lbl{font-size:.63rem;letter-spacing:.09em;color:var(--soft);}
+.pay-panel{display:none;}
+.pay-panel.active{display:block;}
+.upi-apps{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:14px;}
+.upi-app{border:1px solid var(--border2);padding:12px 5px;text-align:center;cursor:pointer;transition:all .3s;background:var(--surface);}
+.upi-app:hover,.upi-app.sel{border-color:var(--accent2);background:rgba(124,62,14,0.12);}
+.upi-app-img{width:36px;height:36px;border-radius:8px;object-fit:contain;margin:0 auto 5px;display:block;}
+.upi-app-name{font-size:.58rem;color:var(--muted);font-weight:600;}
+.upi-divider{text-align:center;font-size:.66rem;color:var(--muted);margin:12px 0;position:relative;}
+.upi-divider::before,.upi-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border2);}
+.upi-divider::before{left:0;}.upi-divider::after{right:0;}
+.upi-input{width:100%;padding:11px 14px;background:var(--surface);border:1px solid var(--border2);font-family:'Outfit',sans-serif;font-size:.88rem;color:var(--white);outline:none;transition:all .3s;margin-bottom:10px;}
+.upi-input:focus{border-color:var(--gold);}
+.card-field{margin-bottom:12px;}
+.card-label{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;}
+.card-input{width:100%;padding:11px 14px;background:var(--surface);border:1px solid var(--border2);font-family:'Outfit',sans-serif;font-size:.86rem;color:var(--white);outline:none;transition:all .3s;}
+.card-input:focus{border-color:var(--gold);}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.card-brands{display:flex;gap:7px;margin-bottom:16px;}
+.card-brand{height:24px;border:1px solid var(--border2);padding:2px 7px;background:rgba(255,255,255,.04);border-radius:2px;}
+.more-list{display:flex;flex-direction:column;gap:7px;}
+.more-way{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid var(--border2);cursor:pointer;transition:all .3s;background:var(--surface);}
+.more-way:hover,.more-way.sel{border-color:var(--accent2);background:rgba(124,62,14,0.1);}
+.mw-ico{font-size:1.3rem;width:28px;text-align:center;}
+.mw-info{flex:1;}
+.mw-name{font-weight:600;color:var(--white);font-size:.83rem;margin-bottom:1px;}
+.mw-sub{font-size:.68rem;color:var(--muted);}
+.mw-radio{width:15px;height:15px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;transition:all .3s;display:flex;align-items:center;justify-content:center;}
+.more-way.sel .mw-radio{border-color:var(--accent2);background:var(--accent2);}
+.more-way.sel .mw-radio::after{content:'';width:4px;height:4px;background:white;border-radius:50%;}
+.pay-btn{width:100%;margin-top:20px;padding:17px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;font-family:'Outfit',sans-serif;font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .35s;display:flex;align-items:center;justify-content:center;gap:9px;}
+.pay-btn:hover{box-shadow:0 22px 55px rgba(124,62,14,0.48);}
+.pay-btn:disabled{opacity:.5;cursor:not-allowed;}
+.pay-secure-row{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap;}
+.psr-item{font-size:.6rem;color:var(--muted);display:flex;align-items:center;gap:4px;}
+
+/* ─── SUCCESS ─── */
+.pay-success{text-align:center;padding:44px 32px;display:none;}
+.pay-success.show{display:block;}
+.success-ring{width:84px;height:84px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:2.3rem;margin:0 auto 22px;animation:successAnim .7s cubic-bezier(.4,0,.2,1) forwards;box-shadow:0 0 36px rgba(200,146,42,0.28);}
+@keyframes successAnim{0%{transform:scale(0) rotate(-15deg);}70%{transform:scale(1.1) rotate(3deg);}100%{transform:scale(1) rotate(0);}}
+.success-title{font-family:'Playfair Display',serif;font-size:2rem;color:var(--white);margin-bottom:9px;}
+.success-sub{font-size:.84rem;color:var(--muted);line-height:1.8;margin-bottom:24px;}
+.success-id-box{background:var(--surface);border:1px dashed var(--border);padding:12px 22px;display:inline-block;margin-bottom:22px;}
+.sid-lbl{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.sid-val{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold);}
+.notif-box{background:var(--surface);border:1px solid var(--border2);padding:18px 20px;text-align:left;margin-bottom:20px;}
+.notif-title{font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.notif-row{display:flex;align-items:center;gap:10px;font-size:.76rem;color:var(--soft);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.notif-row:last-child{border-bottom:none;}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:#5a9e40;flex-shrink:0;box-shadow:0 0 7px #5a9e40;animation:blink 1s 3;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.excel-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:13px;background:linear-gradient(135deg,#1e5c12,#153d0c);color:white;border:none;font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:all .35s;margin-bottom:9px;}
+.excel-btn:hover{box-shadow:0 14px 36px rgba(30,92,18,.4);}
+.continue-btn{width:100%;padding:13px;background:transparent;border:1px solid var(--border);color:var(--gold);font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+.continue-btn:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);}
+
+/* ─── STATUS NOTIFICATION ─── */
+.status-notif{position:fixed;top:86px;right:22px;z-index:9999;background:var(--bg2);border:1px solid var(--border);padding:16px 20px;max-width:320px;box-shadow:0 26px 70px rgba(0,0,0,.48);transform:translateX(400px);transition:transform .6s cubic-bezier(.4,0,.2,1);display:flex;gap:12px;align-items:flex-start;}
+.status-notif.show{transform:translateX(0);}
+.sn-ico{font-size:1.3rem;flex-shrink:0;}
+.sn-title{font-size:.7rem;font-weight:700;color:var(--gold);letter-spacing:.13em;text-transform:uppercase;margin-bottom:3px;}
+.sn-body{font-size:.7rem;color:var(--muted);line-height:1.5;}
+
+/* ─── FLOATING ELEMENTS ─── */
+.wa-float{position:fixed;bottom:30px;right:30px;z-index:700;background:linear-gradient(135deg,#25D366,#128c7e);color:white;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.45rem;text-decoration:none;box-shadow:0 7px 28px rgba(37,211,102,0.38);animation:pulse 3s ease-in-out infinite;}
+.wa-float:hover{transform:scale(1.1);}
+@keyframes pulse{0%,100%{box-shadow:0 7px 28px rgba(37,211,102,0.38);}50%{box-shadow:0 7px 44px rgba(37,211,102,0.56),0 0 0 7px rgba(37,211,102,0.07);}}
+.scroll-top{position:fixed;bottom:96px;right:30px;z-index:700;width:42px;height:42px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--gold);cursor:pointer;opacity:0;pointer-events:none;transition:all .4s;}
+.scroll-top.vis{opacity:1;pointer-events:all;}
+.scroll-top:hover{background:var(--gold);color:var(--bg);}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg2);color:var(--white);padding:13px 26px;font-size:.74rem;letter-spacing:.09em;box-shadow:0 22px 45px rgba(0,0,0,.38);z-index:9999;opacity:0;transition:all .45s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;gap:9px;border:1px solid var(--border);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1100px){
+  .why-grid,.benefits-grid,.order-grid{grid-template-columns:1fr;}
+  .why-img-wrap{display:none;}
+  .benefits-visual{display:none;}
+  .process-inner{grid-template-columns:1fr 1fr;}
+  .testi-grid{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:40px;}
+}
+@media(max-width:768px){
+  .nav-links,.nav-right>.nav-cta{display:none;}
+  .hamburger{display:flex;}
+  .hero-img-panel{display:none;}
+  .hero-content{max-width:100%;}
+  .process-inner{grid-template-columns:1fr;}
+  .testi-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;gap:32px;}
+  .form-grid{grid-template-columns:1fr;}
+  .form-group.full{grid-column:span 1;}
+  .cart-drawer{width:100%;right:-100%;}
+  .products-grid{grid-template-columns:1fr 1fr;}
+  .hero-stats{flex-direction:column;gap:0;}
+  .stat-item:first-child{border-radius:4px 4px 0 0;}
+  .stat-item:last-child{border-radius:0 0 4px 4px;}
+  .stat-item{border-radius:0;border-left:1px solid var(--border)!important;border-right:1px solid var(--border)!important;}
+  .stat-item:not(:first-child){border-top:none;}
+  .section{padding:80px 4%;}
+  #hero{padding:110px 4% 80px;}
+  .order-form{padding:28px 22px;}
+  .pay-cust-row{grid-template-columns:1fr;}
+  .pay-cust-full{grid-column:span 1;}
+  .pay-body{padding:20px 22px;}
+  .pay-head{padding:18px 22px;}
+  .pay-summary{padding:14px 22px;}
+  nav{padding:0 4%;height:65px;}
+  .nav-right{gap:8px;}
+  .nav-right .cart-btn{padding:8px 12px;font-size:.6rem;}
+}
+@media(max-width:480px){
+  .products-grid{grid-template-columns:1fr;}
+  .nl-form{flex-direction:column;}
+  .nl-form .nl-btn{width:100%;text-align:center;}
+  .pay-tabs{grid-template-columns:1fr 1fr 1fr;}
+  .upi-apps{grid-template-columns:repeat(4,1fr);}
+  .hero-btns{flex-direction:column;align-items:flex-start;}
+  .btn-hero{width:100%;justify-content:center;}
+  h1.hero-h1{font-size:clamp(2.4rem,9vw,3.4rem);}
+  .social-row{gap:8px;}
+  .soc-link{padding:9px 14px;font-size:.6rem;}
+  .why-feats{gap:1px;}
+  .testi-card{padding:26px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<!-- MUSHROOM CANVAS BACKGROUND -->
+<canvas id="mushroomCanvas"></canvas>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-content">
+    <span class="loader-mushroom">🍄</span>
+    <div class="loader-logo">V-<em>Organic</em><br>Farms</div>
+    <div class="loader-sub">Premium Oyster Mushrooms</div>
+    <div class="loader-line"></div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">🍄 V-<em>Organic</em> Farms</a>
+  <ul class="nav-links">
+    <li><a href="#why">Our Farm</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#benefits">Benefits</a></li>
+    <li><a href="#products">Shop</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#order" class="nav-cta">Enquiry</a>
+    <button class="cart-btn" onclick="toggleCart()">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+    <button class="hamburger" onclick="toggleMob()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-menu-close" onclick="toggleMob()">✕</button>
+  <a href="#why" onclick="toggleMob()">Our Farm</a>
+  <a href="#process" onclick="toggleMob()">Process</a>
+  <a href="#benefits" onclick="toggleMob()">Benefits</a>
+  <a href="#products" onclick="toggleMob()">Shop</a>
+  <a href="#order" onclick="toggleMob()">Enquiry</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-content">
+    <div class="hero-chip">Premium Oyster Mushrooms · Kothapalli</div>
+    <div class="marquee-wrap" style="margin:0 0 32px;z-index:1;position:relative;">
+      <div class="marquee-track">
+        <div class="marquee-item"><span class="dot"></span>Free Delivery above ₹499</div>
+        <div class="marquee-item"><span class="dot"></span>Next Day Delivery</div>
+        <div class="marquee-item"><span class="dot"></span>100% Organic Certified</div>
+        <div class="marquee-item"><span class="dot"></span>Bulk Orders Welcome</div>
+        <div class="marquee-item"><span class="dot"></span>Free Delivery above ₹499</div>
+        <div class="marquee-item"><span class="dot"></span>Next Day Delivery</div>
+        <div class="marquee-item"><span class="dot"></span>100% Organic Certified</div>
+        <div class="marquee-item"><span class="dot"></span>Bulk Orders Welcome</div>
+      </div>
+    </div>
+    <h1 class="hero-h1">Grown with<br><em>Nature's</em> Pure<br><span class="line3">Magic</span></h1>
+    <p class="hero-desc">Hand-harvested fresh oyster mushrooms straight from our certified organic farm. No pesticides, no chemicals — just the purest taste nature intended.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-hero">🍄 Shop Fresh Now <span>→</span></a>
+      <a href="#order" class="btn-ghost">Bulk Orders ›</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num" data-target="150">0</div><div class="stat-label">Happy Customers</div></div>
+      <div class="stat-item"><div class="stat-num" data-target="2">0</div><div class="stat-label">Years Growing</div></div>
+      <div class="stat-item"><div class="stat-num" data-target="100">0</div><div class="stat-label">% Chemical Free</div></div>
+    </div>
+  </div>
+  <div class="hero-img-panel">
+    <img src="https://images.pexels.com/photos/31203034/pexels-photo-31203034.jpeg" alt="Oyster Mushrooms"/>
+  </div>
+</section>
+
+<!-- MARQUEE 2 -->
+<div class="marquee-wrap" style="position:relative;z-index:5;">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="dot"></span>Pink Oyster Mushrooms</div>
+    <div class="marquee-item"><span class="dot"></span>Oyster Powder</div>
+    <div class="marquee-item"><span class="dot"></span>Spawn Available</div>
+    <div class="marquee-item"><span class="dot"></span>Bulk Orders</div>
+    <div class="marquee-item"><span class="dot"></span>Farm Fresh Delivery</div>
+    <div class="marquee-item"><span class="dot"></span>Dry Mushrooms</div>
+    <div class="marquee-item"><span class="dot"></span>Pink Oyster Mushrooms</div>
+    <div class="marquee-item"><span class="dot"></span>Oyster Powder</div>
+    <div class="marquee-item"><span class="dot"></span>Spawn Available</div>
+    <div class="marquee-item"><span class="dot"></span>Bulk Orders</div>
+    <div class="marquee-item"><span class="dot"></span>Farm Fresh Delivery</div>
+    <div class="marquee-item"><span class="dot"></span>Dry Mushrooms</div>
+  </div>
+</div>
+
+<!-- WHY US -->
+<section id="why" class="section">
+  <div class="why-grid">
+    <div class="why-img-wrap reveal-l">
+      <div class="why-corner"></div>
+      <div class="why-img-frame">
+        <img src="https://images.unsplash.com/photo-1594498257892-41a5d9e4f2b8?w=700&q=80" alt="Farm" class="why-img"/>
+      </div>
+      <div class="why-stat-badge">
+        <div class="wsb-num">4.9</div>
+        <div class="wsb-info">Customer<br>Rating</div>
+      </div>
+    </div>
+    <div class="reveal-r">
+      <div class="eyebrow">About V-Organic Farms</div>
+      <h2 class="section-title">Why Our <em>Mushrooms</em><br>Are Different</h2>
+      <div class="gold-line"></div>
+      <p class="section-desc">We cultivate premium oyster mushrooms using traditional organic methods combined with modern growing science. Every batch is grown in controlled environments ensuring maximum freshness, nutrition, and flavour.</p>
+      <div class="why-feats">
+        <div class="why-feat"><div class="feat-icon">🌱</div><div class="feat-text"><h4>100% Chemical-Free</h4><p>No pesticides, no artificial growth hormones. Pure natural substrate cultivation from day one.</p></div></div>
+        <div class="why-feat"><div class="feat-icon">⚡</div><div class="feat-text"><h4>Harvested Same Day</h4><p>Mushrooms are harvested and packed within hours of your order for maximum freshness.</p></div></div>
+        <div class="why-feat"><div class="feat-icon">🌡️</div><div class="feat-text"><h4>Cold Chain Delivery</h4><p>Temperature-controlled packaging ensures your mushrooms arrive as fresh as when they left the farm.</p></div></div>
+        <div class="why-feat"><div class="feat-icon">🤝</div><div class="feat-text"><h4>Direct from Farmer</h4><p>Zero middlemen. You buy directly from us, ensuring the best price and freshest product.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" class="section" style="padding-top:70px;">
+  <div class="products-top">
+    <div class="reveal"><div class="eyebrow">Fresh Harvest</div><h2 class="section-title">Our <em>Oyster</em> Collection</h2></div>
+    <div class="filter-row reveal">
+      <button class="filter-tab active" onclick="filterProducts('all',this)">All</button>
+      <button class="filter-tab" onclick="filterProducts('fresh',this)">Fresh Cut</button>
+      <button class="filter-tab" onclick="filterProducts('dry',this)">Dry</button>
+      <button class="filter-tab" onclick="filterProducts('spawn',this)">Spawn</button>
+    </div>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="section">
+  <div class="reveal" style="max-width:500px;">
+    <div class="eyebrow">How We Grow</div>
+    <h2 class="section-title">From <em>Spore</em> to Your Table</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="process-inner">
+    <div class="process-step reveal"><div class="ps-num">01</div><div class="ps-line"></div><div class="ps-icon">🌾</div><h3 class="ps-title">Substrate Preparation</h3><p class="ps-desc">We carefully prepare organic rice straw and wheat bran substrate, sterilized to perfection for optimal mushroom growth.</p></div>
+    <div class="process-step reveal" style="transition-delay:.1s"><div class="ps-num">02</div><div class="ps-line"></div><div class="ps-icon">🧫</div><h3 class="ps-title">Spawn Inoculation</h3><p class="ps-desc">Premium oyster mushroom spawn is inoculated in a sterile environment ensuring 100% contamination-free growth.</p></div>
+    <div class="process-step reveal" style="transition-delay:.2s"><div class="ps-num">03</div><div class="ps-line"></div><div class="ps-icon">💧</div><h3 class="ps-title">Climate Controlled Growth</h3><p class="ps-desc">Precise temperature (22–28°C), humidity (85–95%) and air circulation create perfect fruiting conditions.</p></div>
+    <div class="process-step reveal" style="transition-delay:.3s"><div class="ps-num">04</div><div class="ps-line"></div><div class="ps-icon">📦</div><h3 class="ps-title">Harvest & Deliver</h3><p class="ps-desc">Hand-picked at peak freshness, carefully packed in breathable boxes and delivered same day to your door.</p></div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits" class="section">
+  <div class="benefits-grid">
+    <div>
+      <div class="eyebrow reveal">Health & Nutrition</div>
+      <h2 class="section-title reveal">Why Eat <em>Oyster</em><br>Mushrooms</h2>
+      <div class="gold-line reveal"></div>
+      <div class="benefit-list">
+        <div class="benefit-item reveal"><div class="bi-icon">💪</div><div class="bi-text"><h4>High Protein Content</h4><p>Contains up to 30% protein by dry weight — perfect meat substitute for vegetarians and vegans.</p></div></div>
+        <div class="benefit-item reveal" style="transition-delay:.1s"><div class="bi-icon">🧠</div><div class="bi-text"><h4>Brain Health Support</h4><p>Rich in niacin and folate that support cognitive function, memory, and mental clarity.</p></div></div>
+        <div class="benefit-item reveal" style="transition-delay:.2s"><div class="bi-icon">🛡️</div><div class="bi-text"><h4>Immunity Booster</h4><p>Beta-glucans in oyster mushrooms activate immune cells, strengthening your body's natural defences.</p></div></div>
+        <div class="benefit-item reveal" style="transition-delay:.3s"><div class="bi-icon">❤️</div><div class="bi-text"><h4>Heart Health</h4><p>Lovastatin compounds naturally lower cholesterol levels and support cardiovascular health.</p></div></div>
+        <div class="benefit-item reveal" style="transition-delay:.4s"><div class="bi-icon">⚖️</div><div class="bi-text"><h4>Low in Calories</h4><p>Only ~33 calories per 100g with high fibre content — ideal for weight management diets.</p></div></div>
+      </div>
+    </div>
+    <div class="benefits-visual reveal-r">
+      <div class="hex-container">
+        <div class="hex-ring"><div class="hex-dot"></div></div>
+        <div class="hex-ring"></div>
+        <div class="hex-ring"></div>
+        <div class="hex-core"><div class="hc-num">18+</div><div class="hc-label">Amino Acids</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="section">
+  <div class="reveal" style="text-align:center;margin-bottom:56px;">
+    <div class="eyebrow" style="justify-content:center;">Customer Stories</div>
+    <h2 class="section-title" style="text-align:center;">What Our <em>Customers</em> Say</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card reveal"><div class="testi-stars">★★★★★</div><div class="testi-q">"</div><p class="testi-text">I've tried oyster mushrooms from many suppliers, but these are by far the best. The texture is firm, the color is fresh and natural. You can clearly tell they are harvested recently. Perfect for cooking – they stay soft and tasty even after frying.</p><div class="testi-author"><div class="testi-av">A</div><div><div class="testi-name">Akshay</div><div class="testi-role">Cafe Owner, Warangal</div></div></div></div>
+    <div class="testi-card reveal" style="transition-delay:.1s"><div class="testi-stars">★★★★★</div><div class="testi-q">"</div><p class="testi-text">I purchased dried oyster mushrooms and the quality is excellent. The pieces are clean, well-dried, and free from dust. After soaking, they regain a great texture and taste just like fresh mushrooms. Highly recommended for bulk buyers.</p><div class="testi-author"><div class="testi-av">E</div><div><div class="testi-name">Eshwar</div><div class="testi-role">Cloud Kitchen, Hyderabad</div></div></div></div>
+    <div class="testi-card reveal" style="transition-delay:.2s"><div class="testi-stars">★★★★★</div><div class="testi-q">"</div><p class="testi-text">The taste of these oyster mushrooms is amazing! They have a mild, earthy flavor and cook very well in curries and fry dishes. Unlike others, they don't become soggy. You can really feel the premium quality when you eat them.</p><div class="testi-author"><div class="testi-av">S</div><div><div class="testi-name">Sowmya</div><div class="testi-role">Home Gardener, Andhra Pradesh</div></div></div></div>
+  </div>
+</section>
+
+<!-- ORDER -->
+<section id="order" class="section">
+  <div style="text-align:center;margin-bottom:66px;" class="reveal">
+    <div class="eyebrow" style="justify-content:center;">Place Your Order</div>
+    <h2 class="section-title" style="text-align:center;">Fresh to Your <em>Doorstep</em></h2>
+    <div class="gold-line" style="margin:16px auto 0;"></div>
+  </div>
+  <div class="order-grid">
+    <div class="reveal-l">
+      <div class="dc-list">
+        <div class="dc-item"><div class="dc-ico">🏠</div><div class="dc-text"><h4>Home Delivery</h4><p>Fresh oyster mushrooms delivered to your home. Available in 250g, 500g, and 1kg packs. Expect your order in 2–3 business days.</p></div></div>
+        <div class="dc-item"><div class="dc-ico">🍽️</div><div class="dc-text"><h4>Restaurant & Hotel Supply</h4><p>Bulk supply for restaurants, hotels, and cloud kitchens. Weekly subscription plans available at 20% discount.</p></div></div>
+        <div class="dc-item"><div class="dc-ico">🌱</div><div class="dc-text"><h4>Grow Your Own Kits</h4><p>Start your own mushroom farm at home with our ready-to-fruit oyster mushroom kits. Comes with full growing guide.</p></div></div>
+        <div class="dc-item"><div class="dc-ico">📱</div><div class="dc-text"><h4>WhatsApp Orders</h4><p>Prefer to order via WhatsApp? Message us at <strong style="color:var(--gold);">+91 8106088075</strong> for quick orders and custom quotes.</p></div></div>
+      </div>
+    </div>
+    <div class="order-form reveal-r">
+      <h3 class="form-title">Send an <em style="font-style:italic;color:var(--gold);">Enquiry</em></h3>
+      <p class="form-sub">Fill out below and we'll get back within 2 hours</p>
+      <form onsubmit="submitForm(event)">
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">Full Name *</label><input type="text" id="enqName" class="form-input" placeholder="Your Name" required/></div>
+          <div class="form-group"><label class="form-label">Phone Number *</label><input type="tel" id="enqPhone" class="form-input" placeholder="+91 XXXXX XXXXX" required/></div>
+          <div class="form-group"><label class="form-label">Email Address</label><input type="email" id="enqEmail" class="form-input" placeholder="your@email.com"/></div>
+          <div class="form-group"><label class="form-label">Customer Type</label><select id="enqType" class="form-select"><option>Individual</option><option>Restaurant / Hotel</option><option>Grocery Store</option><option>Corporate</option></select></div>
+          <div class="form-group"><label class="form-label">Mushroom Variety</label><select id="enqVariety" class="form-select"><option>White Oyster</option><option>Dry Oyster</option><option>Oyster Powder</option><option>Pink Oyster</option><option>Milky</option></select></div>
+          <div class="form-group"><label class="form-label">Quantity Required</label><select id="enqQty" class="form-select"><option>250g Pack</option><option>500g Pack</option><option>10 KG Pack</option><option>50 KG (Bulk)</option><option>100 KG (Bulk)</option></select></div>
+          <div class="form-group full"><label class="form-label">Special Requirements</label><textarea id="enqNotes" class="form-textarea" placeholder="Any specific requirements, delivery address, or questions..."></textarea></div>
+        </div>
+        <button type="submit" class="form-submit">Send Enquiry — We'll Call You Back</button>
+        <p class="form-note">✓ No spam · Response within 2 hours · Free consultation</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="nl-eyebrow">Stay Updated</div>
+  <h2 class="nl-title">Get Fresh Harvest <em>Alerts</em> &<br>Exclusive Offers</h2>
+  <p class="nl-sub">Be the first to know when fresh batches arrive. Get 10% off your first order!</p>
+  <form class="nl-form" onsubmit="subscribeNL(event)">
+    <input type="email" class="nl-input" placeholder="Enter your email address..." required/>
+    <button type="submit" class="nl-btn">Subscribe</button>
+  </form>
+</section>
+
+<!-- SOCIAL -->
+<section id="social-section">
+  <div class="social-label">Follow Us On</div>
+  <div class="social-row">
+    <a href="https://facebook.com" target="_blank" class="soc-link fb"><svg class="soc-ico" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg><span class="soc-name">Facebook</span></a>
+    <a href="https://instagram.com" target="_blank" class="soc-link ig"><svg class="soc-ico" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span class="soc-name">Instagram</span></a>
+    <a href="https://youtube.com" target="_blank" class="soc-link yt"><svg class="soc-ico" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg><span class="soc-name">YouTube</span></a>
+    <a href="https://wa.me/918106088075" target="_blank" class="soc-link wa"><svg class="soc-ico" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg><span class="soc-name">WhatsApp</span></a>
+    <a href="https://twitter.com" target="_blank" class="soc-link tw"><svg class="soc-ico" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span class="soc-name">Twitter / X</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">🍄 V-<em>Organic</em> Farms</div>
+      <p class="footer-about">Premium oyster mushroom farm delivering fresh, organic, chemical-free mushrooms directly from our farm to your table since 2022.</p>
+      <div class="footer-social">
+        <a href="https://facebook.com" target="_blank" class="footer-soc"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="https://instagram.com" target="_blank" class="footer-soc"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+        <a href="https://wa.me/918106088075" target="_blank" class="footer-soc"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col"><h5>Products</h5><ul><li><a href="#">White Oyster</a></li><li><a href="#">Dry Oyster</a></li><li><a href="#">Oyster Powder</a></li><li><a href="#">Pink Oyster</a></li><li><a href="#">Spawn Kits</a></li><li><a href="#">Milky</a></li></ul></div>
+    <div class="footer-col"><h5>Information</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Farm Tour</a></li><li><a href="#">Growing Process</a></li><li><a href="#">Health Benefits</a></li><li><a href="#">Blog</a></li><li><a href="#">FAQ</a></li></ul></div>
+    <div class="footer-col"><h5>Contact</h5><ul>
+      <li><a href="tel:+918106088075">📞 +91 8106088075</a></li>
+      <li><a href="mailto:reddy.venkateshwar12@gmail.com">✉️ Email Us</a></li>
+      <li><a href="#">📍 Kothapalli, Telangana</a></li>
+      <li><a href="#">⏰ Mon–Sat 7AM–7PM</a></li>
+      <li><a href="https://wa.me/918106088075" target="_blank">💬 WhatsApp Order</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 V-Organic Farms. All rights reserved.</div>
+    <div class="footer-tagline">Grown with love, delivered with care 🍄</div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-hdr"><h3>🛒 Your Cart</h3><button class="cart-close-btn" onclick="toggleCart()">✕</button></div>
+  <div class="cart-items" id="cartItems"><div class="cart-empty">Your cart is empty.<br>Add some fresh mushrooms!</div></div>
+  <div class="cart-ftr">
+    <div class="cart-total-row"><span class="ct-lbl">Total</span><span class="ct-amt" id="cartTotal">₹0.00</span></div>
+    <button class="checkout-btn" onclick="openPayment()">Proceed to Payment →</button>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="pay-overlay" id="payOverlay">
+  <div class="pay-modal">
+    <div class="pay-head">
+      <div class="pay-title">Secure <em>Checkout</em></div>
+      <div class="pay-head-right">
+        <div class="ssl-badge">🔒 SSL Secured</div>
+        <button class="pay-close" onclick="closePayment()">✕</button>
+      </div>
+    </div>
+    <div class="pay-summary">
+      <div><div class="psm-lbl">Amount to Pay</div><div class="psm-amt" id="payAmount">₹0.00</div></div>
+      <div class="psm-items" id="payItemsSummary">—</div>
+    </div>
+    <div class="pay-body" id="payBody">
+      <!-- Customer Details (filled here for order notification) -->
+      <div class="pay-method-lbl" style="margin-bottom:10px;">Your Details</div>
+      <div class="pay-cust-row">
+        <div class="pay-cust-field">
+          <label class="pay-cust-label">Full Name *</label>
+          <input type="text" id="payName" class="pay-cust-input" placeholder="Your full name" required/>
+        </div>
+        <div class="pay-cust-field">
+          <label class="pay-cust-label">Mobile Number *</label>
+          <input type="tel" id="payPhone" class="pay-cust-input" placeholder="+91 XXXXX XXXXX" required/>
+        </div>
+        <div class="pay-cust-field pay-cust-full">
+          <label class="pay-cust-label">Delivery Address *</label>
+          <input type="text" id="payAddress" class="pay-cust-input" placeholder="Full delivery address" required/>
+        </div>
+        <div class="pay-cust-field pay-cust-full" style="display:none;" id="payEmailRow">
+          <!-- auto-filled from enquiry form -->
+        </div>
+      </div>
+
+      <div class="pay-method-lbl">Choose Payment Method</div>
+      <div class="pay-tabs">
+        <div class="pay-tab active" onclick="selectPayTab('upi',this)"><div class="pt-icon">📲</div><div class="pt-lbl">UPI</div></div>
+        <div class="pay-tab" onclick="selectPayTab('card',this)"><div class="pt-icon">💳</div><div class="pt-lbl">Card</div></div>
+        <div class="pay-tab" onclick="selectPayTab('more',this)"><div class="pt-icon">⊕</div><div class="pt-lbl">More</div></div>
+      </div>
+
+      <!-- UPI PANEL -->
+      <div class="pay-panel active" id="panel-upi">
+        <div class="upi-apps">
+          <div class="upi-app" onclick="selectUpiApp(this,'GPay')">
+            <svg class="upi-app-img" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="white"/><text x="20" y="26" font-size="20" text-anchor="middle" font-family="Arial">G</text><circle cx="20" cy="20" r="19" stroke="#4285F4" stroke-width="1.5" fill="none"/></svg>
+            <div class="upi-app-name">GPay</div>
+          </div>
+          <div class="upi-app" onclick="selectUpiApp(this,'PhonePe')">
+            <svg class="upi-app-img" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#5f259f"/><text x="20" y="27" font-size="18" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold">Pe</text></svg>
+            <div class="upi-app-name">PhonePe</div>
+          </div>
+          <div class="upi-app" onclick="selectUpiApp(this,'Paytm')">
+            <svg class="upi-app-img" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#00BAF2"/><text x="20" y="27" font-size="11" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold">Paytm</text></svg>
+            <div class="upi-app-name">Paytm</div>
+          </div>
+          <div class="upi-app" onclick="selectUpiApp(this,'BHIM')">
+            <svg class="upi-app-img" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="10" fill="#00A651"/><text x="20" y="17" font-size="9" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold">BHIM</text><text x="20" y="29" font-size="8" text-anchor="middle" fill="#FFD700" font-family="Arial">UPI</text></svg>
+            <div class="upi-app-name">BHIM</div>
+          </div>
+        </div>
+        <div class="upi-divider">or enter UPI ID manually</div>
+        <input type="text" class="upi-input" id="upiId" placeholder="yourname@oksbi / @ybl / @paytm"/>
+        <div style="font-size:.66rem;color:var(--muted);">🔒 Instant · Secure · Powered by NPCI</div>
+      </div>
+
+      <!-- CARD PANEL -->
+      <div class="pay-panel" id="panel-card">
+        <div class="card-brands">
+          <svg class="card-brand" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg"><text x="40" y="22" font-size="16" text-anchor="middle" fill="white" font-family="Arial" font-weight="bold" font-style="italic">VISA</text></svg>
+          <svg class="card-brand" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg"><circle cx="25" cy="15" r="11" fill="#EB001B" opacity=".8"/><circle cx="45" cy="15" r="11" fill="#F79E1B" opacity=".8"/></svg>
+          <svg class="card-brand" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg"><text x="40" y="21" font-size="11" text-anchor="middle" fill="#5a9e40" font-family="Arial" font-weight="bold">RuPay</text></svg>
+        </div>
+        <div class="card-field"><label class="card-label">Card Number</label><input class="card-input" id="cardNum" type="text" placeholder="1234  5678  9012  3456" maxlength="19" oninput="formatCard(this)"/></div>
+        <div class="card-field"><label class="card-label">Cardholder Name</label><input class="card-input" id="cardName" type="text" placeholder="As printed on card"/></div>
+        <div class="card-row">
+          <div class="card-field"><label class="card-label">Expiry</label><input class="card-input" id="cardExp" type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)"/></div>
+          <div class="card-field"><label class="card-label">CVV</label><input class="card-input" id="cardCvv" type="password" placeholder="•••" maxlength="4"/></div>
+        </div>
+      </div>
+
+      <!-- MORE PANEL -->
+      <div class="pay-panel" id="panel-more">
+        <div class="more-list">
+          <div class="more-way" onclick="selectMoreWay(this,'Net Banking')"><div class="mw-ico">🏦</div><div class="mw-info"><div class="mw-name">Net Banking</div><div class="mw-sub">SBI, HDFC, ICICI, Axis & 100+ banks</div></div><div class="mw-radio"></div></div>
+          <div class="more-way" onclick="selectMoreWay(this,'Cash on Delivery')"><div class="mw-ico">💵</div><div class="mw-info"><div class="mw-name">Cash on Delivery</div><div class="mw-sub">Pay when your order arrives</div></div><div class="mw-radio"></div></div>
+          <div class="more-way" onclick="selectMoreWay(this,'EMI')"><div class="mw-ico">📅</div><div class="mw-info"><div class="mw-name">EMI</div><div class="mw-sub">No-cost EMI on orders above ₹999</div></div><div class="mw-radio"></div></div>
+          <div class="more-way" onclick="selectMoreWay(this,'WhatsApp Pay')"><div class="mw-ico">💬</div><div class="mw-info"><div class="mw-name">WhatsApp Pay</div><div class="mw-sub">Pay directly via WhatsApp</div></div><div class="mw-radio"></div></div>
+        </div>
+      </div>
+
+      <button class="pay-btn" id="payBtn" onclick="processPayment()">
+        🔒 Pay <span id="payBtnAmount">₹0.00</span> Securely
+      </button>
+      <div class="pay-secure-row">
+        <div class="psr-item">🔒 SSL Encrypted</div>
+        <div class="psr-item">✓ PCI-DSS</div>
+        <div class="psr-item">🛡️ Fraud Protected</div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="pay-success" id="paySuccess">
+      <div class="success-ring">✓</div>
+      <div class="success-title">Order Confirmed!</div>
+      <p class="success-sub">Your fresh mushrooms are being prepared. The farm owner has been notified immediately! 🍄</p>
+      <div class="success-id-box"><div class="sid-lbl">Order ID</div><span class="sid-val" id="successOrderId">—</span></div>
+      <div class="notif-box">
+        <div class="notif-title">Notifications Dispatched</div>
+        <div class="notif-row"><div class="notif-dot"></div><span id="notifWA">📲 WhatsApp message sent to farm owner</span></div>
+        <div class="notif-row"><div class="notif-dot"></div><span id="notifEmail2">✉️ Email sent to farm owner</span></div>
+        <div class="notif-row"><div class="notif-dot"></div><span id="notifCustWA">📱 WhatsApp confirmation sent to you</span></div>
+        <div class="notif-row"><div class="notif-dot"></div>🏪 Farm preparing order #<span id="notifOrderNum">—</span></div>
+      </div>
+      <button class="excel-btn" onclick="downloadExcel()">
+        📊 Download Order Details as Excel
+      </button>
+      <button class="continue-btn" onclick="closeAndClear()">Continue Shopping →</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS NOTIFICATION -->
+<div class="status-notif" id="statusNotif">
+  <div class="sn-ico">🍄</div>
+  <div><div class="sn-title">New Order Received</div><div class="sn-body" id="statusNotifBody">—</div></div>
+</div>
+
+<!-- FLOATING WA -->
+<a href="https://wa.me/918106088075?text=Hi! I'd like to order fresh oyster mushrooms from V-Organic Farms." class="wa-float" target="_blank">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="toast" id="toast"><span style="color:var(--gold);">✦</span><span id="toastMsg">—</span></div>
+
+<script>
+// ══════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════
+const FARM_PHONE = '918106088075';
+const FARM_EMAIL = 'reddy.venkateshwar12@gmail.com';
+const FARM_NAME  = 'V-Organic Farms';
+
+const EMAILJS_SERVICE_ID  = 'service_k1hgbhl';
+const EMAILJS_TEMPLATE_ID = 'template_bhn83pu';
+const EMAILJS_PUBLIC_KEY  = '6ncVgS146dpkUF3vF';
+try { emailjs.init(EMAILJS_PUBLIC_KEY); } catch(e){}
+
+// ══════════════════════════════════════════
+//  MUSHROOM CANVAS BACKGROUND ANIMATION
+// ══════════════════════════════════════════
+(function initMushroomCanvas(){
+  const canvas = document.getElementById('mushroomCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Mushroom emoji array for drawing
+  const mushroomTypes = ['🍄','🍄','🍄'];
+
+  function drawMushroom(ctx, x, y, size, alpha, rotation){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.font = size + 'px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🍄', 0, 0);
+    ctx.restore();
+  }
+
+  // Also draw simple geometric mushrooms for variety
+  function drawGeomMushroom(ctx, x, y, r, color, alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    // cap
+    ctx.beginPath();
+    ctx.ellipse(x, y, r, r * 0.7, 0, Math.PI, 0);
+    ctx.fillStyle = color;
+    ctx.fill();
+    // stem
+    ctx.beginPath();
+    ctx.rect(x - r * 0.22, y, r * 0.44, r * 0.65);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  class FloatingMushroom {
+    constructor(){
+      this.reset(true);
+    }
+    reset(init){
+      this.x = Math.random() * (W||1000);
+      this.y = init ? Math.random() * (H||800) : (H||800) + 60;
+      this.size = 14 + Math.random() * 28;
+      this.speed = 0.18 + Math.random() * 0.32;
+      this.drift = (Math.random() - 0.5) * 0.3;
+      this.rotation = Math.random() * Math.PI * 2;
+      this.rotSpeed = (Math.random() - 0.5) * 0.012;
+      this.alpha = 0.04 + Math.random() * 0.12;
+      this.targetAlpha = this.alpha;
+      this.useEmoji = Math.random() > 0.5;
+      const colors = ['#c8922a','#9e5012','#7c3e0e','#6a9c47','#e0aa40','#c8922a'];
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.wobble = Math.random() * Math.PI * 2;
+      this.wobbleSpeed = 0.015 + Math.random() * 0.02;
+    }
+    update(){
+      this.y -= this.speed;
+      this.wobble += this.wobbleSpeed;
+      this.x += Math.sin(this.wobble) * 0.4 + this.drift;
+      this.rotation += this.rotSpeed;
+      if(this.y < -80) this.reset(false);
+    }
+    draw(ctx){
+      if(this.useEmoji){
+        drawMushroom(ctx, this.x, this.y, this.size, this.alpha, this.rotation);
+      } else {
+        drawGeomMushroom(ctx, this.x, this.y, this.size * 0.7, this.color, this.alpha);
+      }
+    }
+  }
+
+  const mushrooms = Array.from({length: 38}, () => new FloatingMushroom());
+
+  // Spores / particles
+  class Spore {
+    constructor(){
+      this.reset(true);
+    }
+    reset(init){
+      this.x = Math.random() * (W||1000);
+      this.y = init ? Math.random() * (H||800) : (H||800) + 10;
+      this.r = 1 + Math.random() * 2.5;
+      this.speed = 0.3 + Math.random() * 0.5;
+      this.alpha = 0.06 + Math.random() * 0.18;
+      this.color = Math.random() > 0.5 ? '#c8922a' : '#6a9c47';
+      this.drift = (Math.random() - 0.5) * 0.5;
+      this.wobble = Math.random() * Math.PI * 2;
+      this.wobbleSpeed = 0.02 + Math.random() * 0.03;
+    }
+    update(){
+      this.y -= this.speed;
+      this.wobble += this.wobbleSpeed;
+      this.x += Math.sin(this.wobble) * 0.6 + this.drift;
+      if(this.y < -10) this.reset(false);
+    }
+    draw(ctx){
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  const spores = Array.from({length: 80}, () => new Spore());
+
+  function animate(){
+    ctx.clearRect(0, 0, W, H);
+    spores.forEach(s => { s.update(); s.draw(ctx); });
+    mushrooms.forEach(m => { m.update(); m.draw(ctx); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ══════════════════════════════════════════
+//  CUSTOM CURSOR (desktop only)
+// ══════════════════════════════════════════
+const cursorEl = document.getElementById('cursor');
+const trailEl  = document.getElementById('cursor-trail');
+if(cursorEl && window.matchMedia('(pointer:fine)').matches){
+  let tx = 0, ty = 0;
+  document.addEventListener('mousemove', e=>{
+    cursorEl.style.left = e.clientX+'px';
+    cursorEl.style.top  = e.clientY+'px';
+    tx = e.clientX; ty = e.clientY;
+  });
+  setInterval(()=>{
+    trailEl.style.left = tx+'px';
+    trailEl.style.top  = ty+'px';
+  }, 80);
+  document.querySelectorAll('a,button,.product-card,.why-feat').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ cursorEl.style.width='22px'; cursorEl.style.height='22px'; });
+    el.addEventListener('mouseleave',()=>{ cursorEl.style.width='12px'; cursorEl.style.height='12px'; });
+  });
+}
+
+// ══════════════════════════════════════════
+//  PRODUCTS DATA
+// ══════════════════════════════════════════
+const products = [
+  {id:1, name:"White Oyster Mushrooms",     category:"fresh", price:149, unit:"250g", img:"https://tse3.mm.bing.net/th/id/OIP.PDuVG1IcHpDxB_k6CJpcGQHaFj?pid=Api&P=0&h=180", desc:"Classic, meaty texture with a mild, earthy flavour. Perfect for stir-fries and soups.", badge:"Best Seller", badgeClass:"", rating:4.9, reviews:128},
+  {id:2, name:"Pink Oyster Mushrooms",category:"fresh", price:179, unit:"250g", img:"https://tse3.mm.bing.net/th/id/OIP.tdBDCgCU3r9qe_lwR0I0DAHaHa?pid=Api&P=0&h=180", desc:"Vibrant pink colour with a bacon-like flavour when sautéed. Visually stunning!", badge:"Seasonal", badgeClass:"gold-badge", rating:4.8, reviews:96},
+  {id:3, name:"Oyster Mushroom Powder",category:"fresh",price:199,unit:"250g", img:"https://tse4.mm.bing.net/th/id/OIP.ZMMzwqicu0YAZgXH3_JZbAHaHa?pid=Api&P=0&h=180", desc:"Finely ground oyster mushroom powder packed with nutrients. Great for smoothies & cooking.", badge:"Premium", badgeClass:"gold-badge", rating:4.9, reviews:74},
+  {id:4, name:"Milky Mushrooms",       category:"fresh", price:129, unit:"500g", img:"https://tse3.mm.bing.net/th/id/OIP.xUW5s0QNgaklf9K6Lb9-uwHaFA?pid=Api&P=0&h=180", desc:"The most versatile variety. Clean white caps with a smooth, velvety flavour.", badge:"Coming Soon", badgeClass:"", rating:4.7, reviews:203},
+  {id:5, name:"Dry Oyster Mushrooms",  category:"dry",   price:349, unit:"100g", img:"https://tse1.mm.bing.net/th/id/OIP.rjNEea6-1EU_uWiPbm1hoAHaHb?pid=Api&P=0&h=180", desc:"Sun-dried to perfection, preserving all nutrients. Rehydrates beautifully in 15 mins.", badge:"Long Shelf Life", badgeClass:"gold-badge", rating:4.8, reviews:61},
+  {id:6, name:"Oyster Mushroom Spawn Kit",category:"spawn",price:299,unit:"kit", img:"https://gachwala.in/wp-content/uploads/2022/07/WHATS-INSIDE-THE-KIT-300X300.jpg", desc:"Grow your own oyster mushrooms at home. Ready-to-fruit kit with full growing guide.", badge:"DIY Kit", badgeClass:"gold-badge", rating:4.9, reviews:87}
+];
+
+let cart = [], currentPayMethod = 'upi', currentMoreWay = null, currentUpiApp = null, lastOrder = null;
+
+// ══════════════════════════════════════════
+//  RENDER PRODUCTS
+// ══════════════════════════════════════════
+function renderProducts(filter='all'){
+  const grid = document.getElementById('productsGrid');
+  const list = filter==='all' ? products : products.filter(p=>p.category===filter);
+  grid.innerHTML = list.map(p=>`
+    <div class="product-card reveal" data-id="${p.id}">
+      <div class="product-img-wrap">
+        <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+        <span class="product-badge ${p.badgeClass}">${p.badge}</span>
+        <div class="product-overlay-btn"><button class="quick-add" onclick="addToCart(${p.id})">+ Add to Cart</button></div>
+      </div>
+      <div class="product-info">
+        <div class="product-cat">${p.category==='fresh'?'Fresh Harvest':p.category==='dry'?'Dehydrated':'Grow Kit'}</div>
+        <h3 class="product-name">${p.name}</h3>
+        <p class="product-desc">${p.desc}</p>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">₹${p.price} <span>/ ${p.unit}</span></div>
+            <div class="product-rating"><span class="stars">★★★★★</span> ${p.rating} (${p.reviews})</div>
+          </div>
+          <button class="add-btn" onclick="addToCart(${p.id})">🛒</button>
+        </div>
+      </div>
+    </div>`).join('');
+  observeReveal();
+}
+
+function filterProducts(filter, btn){
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const grid = document.getElementById('productsGrid');
+  grid.style.opacity='0'; grid.style.transform='translateY(18px)'; grid.style.transition='all .3s';
+  setTimeout(()=>{ renderProducts(filter); grid.style.opacity='1'; grid.style.transform='translateY(0)'; }, 280);
+}
+
+// ══════════════════════════════════════════
+//  CART
+// ══════════════════════════════════════════
+function addToCart(id){
+  const p = products.find(x=>x.id===id);
+  const ex = cart.find(x=>x.id===id);
+  if(ex) ex.qty++; else cart.push({...p, qty:1});
+  updateCartUI();
+  showToast(`🍄 ${p.name} added to cart!`);
+}
+function updateCartUI(){
+  const count = cart.reduce((a,b)=>a+b.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+  const total = cart.reduce((a,b)=>a+b.price*b.qty, 0);
+  document.getElementById('cartTotal').textContent = `₹${total.toFixed(2)}`;
+  const el = document.getElementById('cartItems');
+  if(!cart.length){ el.innerHTML=`<div class="cart-empty">Your cart is empty.<br>Add some fresh mushrooms!</div>`; return; }
+  el.innerHTML = cart.map(item=>`
+    <div class="cart-item">
+      <img src="${item.img}" class="ci-img" alt="${item.name}"/>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-price">₹${item.price} / ${item.unit}</div>
+        <div class="ci-qty">
+          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        </div>
+      </div>
+      <button class="ci-remove" onclick="removeItem(${item.id})">✕</button>
+    </div>`).join('');
+}
+function changeQty(id, delta){ const item=cart.find(x=>x.id===id); if(!item)return; item.qty+=delta; if(item.qty<=0) cart=cart.filter(x=>x.id!==id); updateCartUI(); }
+function removeItem(id){ cart=cart.filter(x=>x.id!==id); updateCartUI(); }
+function toggleCart(){ document.getElementById('cartDrawer').classList.toggle('open'); document.getElementById('cartOverlay').classList.toggle('open'); }
+
+// ══════════════════════════════════════════
+//  PAYMENT MODAL
+// ══════════════════════════════════════════
+function openPayment(){
+  if(!cart.length){ showToast('Your cart is empty!'); return; }
+  const total = cart.reduce((a,b)=>a+b.price*b.qty, 0);
+  document.getElementById('payAmount').textContent = `₹${total.toFixed(2)}`;
+  document.getElementById('payBtnAmount').textContent = `₹${total.toFixed(2)}`;
+  document.getElementById('payItemsSummary').textContent = cart.map(i=>`${i.name} ×${i.qty}`).join(', ');
+  // Pre-fill from enquiry form if filled
+  const enqName  = document.getElementById('enqName')?.value || '';
+  const enqPhone = document.getElementById('enqPhone')?.value || '';
+  if(enqName)  document.getElementById('payName').value  = enqName;
+  if(enqPhone) document.getElementById('payPhone').value = enqPhone;
+  document.getElementById('payBody').style.display = 'block';
+  document.getElementById('paySuccess').classList.remove('show');
+  toggleCart();
+  document.getElementById('payOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closePayment(){ document.getElementById('payOverlay').classList.remove('open'); document.body.style.overflow = ''; }
+function closeAndClear(){ cart=[]; updateCartUI(); closePayment(); }
+function selectPayTab(tab, el){ currentPayMethod=tab; document.querySelectorAll('.pay-tab').forEach(t=>t.classList.remove('active')); el.classList.add('active'); document.querySelectorAll('.pay-panel').forEach(p=>p.classList.remove('active')); document.getElementById('panel-'+tab).classList.add('active'); currentMoreWay=null; currentUpiApp=null; }
+function selectUpiApp(el, app){ document.querySelectorAll('.upi-app').forEach(a=>a.classList.remove('sel')); el.classList.add('sel'); currentUpiApp=app; }
+function selectMoreWay(el, way){ document.querySelectorAll('.more-way').forEach(m=>m.classList.remove('sel')); el.classList.add('sel'); currentMoreWay=way; }
+function formatCard(el){ let v=el.value.replace(/\D/g,'').substring(0,16); el.value=v.replace(/(.{4})/g,'$1  ').trim(); }
+function formatExpiry(el){ let v=el.value.replace(/\D/g,''); if(v.length>=2) v=v.substring(0,2)+' / '+v.substring(2,4); el.value=v; }
+
+// ══════════════════════════════════════════
+//  PROCESS PAYMENT
+// ══════════════════════════════════════════
+function processPayment(){
+  // Validate customer fields
+  const custName  = document.getElementById('payName').value.trim();
+  const custPhone = document.getElementById('payPhone').value.trim();
+  const custAddr  = document.getElementById('payAddress').value.trim();
+  if(!custName){ showToast('Please enter your name'); document.getElementById('payName').focus(); return; }
+  if(!custPhone || custPhone.length < 7){ showToast('Please enter a valid mobile number'); document.getElementById('payPhone').focus(); return; }
+  if(!custAddr){ showToast('Please enter your delivery address'); document.getElementById('payAddress').focus(); return; }
+
+  if(currentPayMethod==='upi'){
+    const upiId = document.getElementById('upiId').value.trim();
+    if(!currentUpiApp && !upiId){ showToast('Please select a UPI app or enter UPI ID'); return; }
+  } else if(currentPayMethod==='card'){
+    const num  = document.getElementById('cardNum').value.replace(/\s/g,'');
+    const name = document.getElementById('cardName').value.trim();
+    const exp  = document.getElementById('cardExp').value.trim();
+    const cvv  = document.getElementById('cardCvv').value.trim();
+    if(num.length<12||!name||exp.length<4||cvv.length<3){ showToast('Please fill all card details correctly'); return; }
+  } else if(currentPayMethod==='more'){
+    if(!currentMoreWay){ showToast('Please select a payment option'); return; }
+  }
+
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Processing your payment...';
+
+  setTimeout(()=>{
+    const orderId = 'VOF-' + Date.now().toString().slice(-6);
+    const customer = {
+      name   : custName,
+      phone  : custPhone,
+      email  : document.getElementById('enqEmail')?.value || '',
+      address: custAddr,
+      type   : document.getElementById('enqType')?.value || 'Individual',
+    };
+    const total = cart.reduce((a,b)=>a+b.price*b.qty, 0);
+    const payMethod = currentPayMethod==='upi'
+      ? (currentUpiApp || document.getElementById('upiId').value || 'UPI')
+      : currentPayMethod==='card' ? 'Credit/Debit Card'
+      : (currentMoreWay || 'Other');
+
+    lastOrder = { orderId, datetime: new Date().toLocaleString('en-IN'), customer, items:[...cart], total, payMethod };
+
+    showSuccess(lastOrder);
+    sendOwnerNotifications(lastOrder);
+    appendToOrderStore(lastOrder);
+
+    btn.disabled = false;
+    btn.innerHTML = `🔒 Pay <span id="payBtnAmount">₹${total.toFixed(2)}</span> Securely`;
+  }, 2200);
+}
+
+// ══════════════════════════════════════════
+//  SHOW SUCCESS
+// ══════════════════════════════════════════
+function showSuccess(order){
+  document.getElementById('payBody').style.display = 'none';
+  const suc = document.getElementById('paySuccess');
+  suc.classList.add('show');
+  document.getElementById('successOrderId').textContent = order.orderId;
+  document.getElementById('notifOrderNum').textContent  = order.orderId;
+  document.getElementById('notifWA').textContent        = `📲 WhatsApp message sent to ${FARM_NAME} owner`;
+  document.getElementById('notifEmail2').textContent    = `✉️ Email notification sent to owner`;
+  document.getElementById('notifCustWA').textContent    = `📱 WhatsApp order summary sent to ${order.customer.phone}`;
+}
+
+// ══════════════════════════════════════════
+//  SEND OWNER + CUSTOMER NOTIFICATIONS
+//  Owner: EmailJS email + WhatsApp (background)
+//  Customer: WhatsApp confirmation message
+// ══════════════════════════════════════════
+function sendOwnerNotifications(order){
+  const itemLines = order.items.map(i=>`  • ${i.name} ×${i.qty} = ₹${(i.price*i.qty).toFixed(2)}`).join('\n');
+
+  // ─── 1. WHATSAPP TO OWNER (background tab) ───
+  const ownerMsg = encodeURIComponent(
+    `🍄 *NEW ORDER — ${FARM_NAME}*\n\n`+
+    `🆔 Order ID: *${order.orderId}*\n`+
+    `⏰ Time: ${order.datetime}\n\n`+
+    `👤 *Customer Details*\n`+
+    `  Name    : ${order.customer.name}\n`+
+    `  Phone   : ${order.customer.phone}\n`+
+    `  Email   : ${order.customer.email||'—'}\n`+
+    `  Type    : ${order.customer.type}\n`+
+    `  Address : ${order.customer.address}\n\n`+
+    `🛒 *Items Ordered*\n${itemLines}\n\n`+
+    `💰 *TOTAL: ₹${order.total.toFixed(2)}*\n`+
+    `💳 Payment: ${order.payMethod}\n`+
+    `✅ Status  : PAID\n\n`+
+    `Please prepare & dispatch! 🚚`
+  );
+  // Open owner WA silently in background
+  const ownerWin = window.open(`https://wa.me/${FARM_PHONE}?text=${ownerMsg}`, '_blank');
+  if(ownerWin) { setTimeout(()=>{ try{ ownerWin.close(); }catch(e){} }, 4000); }
+
+  // ─── 2. EMAIL TO OWNER via EmailJS ───
+  const emailParams = {
+    to_email    : FARM_EMAIL,
+    to_name     : 'V-Organic Farms Owner',
+    order_id    : order.orderId,
+    datetime    : order.datetime,
+    cust_name   : order.customer.name,
+    cust_phone  : order.customer.phone,
+    cust_email  : order.customer.email || '—',
+    cust_type   : order.customer.type,
+    cust_address: order.customer.address,
+    items_list  : order.items.map(i=>`${i.name} ×${i.qty} = ₹${(i.price*i.qty).toFixed(2)}`).join(', '),
+    total_amount: `₹${order.total.toFixed(2)}`,
+    pay_method  : order.payMethod,
+    message     : `New order received. Order ID: ${order.orderId}. Customer: ${order.customer.name}, Phone: ${order.customer.phone}. Total: ₹${order.total.toFixed(2)}.`
+  };
+
+  if(EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY'){
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, emailParams)
+      .then(()=> showToast(`✉️ Email sent to farm owner!`))
+      .catch(err=> console.warn('EmailJS:', err));
+  } else {
+    const mailSubj = encodeURIComponent(`New Order ${order.orderId} — V-Organic Farms`);
+    const mailBody = encodeURIComponent(
+      `NEW ORDER\n\nOrder ID: ${order.orderId}\nTime: ${order.datetime}\n\nCustomer: ${order.customer.name}\nPhone: ${order.customer.phone}\nAddress: ${order.customer.address}\n\nItems:\n${order.items.map(i=>`${i.name} x${i.qty} = ₹${(i.price*i.qty).toFixed(2)}`).join('\n')}\n\nTOTAL: ₹${order.total.toFixed(2)}\nPayment: ${order.payMethod}`
+    );
+    setTimeout(()=>{ window.open(`mailto:${FARM_EMAIL}?subject=${mailSubj}&body=${mailBody}`,'_blank'); }, 2500);
+  }
+
+  // ─── 3. WHATSAPP TO CUSTOMER (their number) ───
+  const custPhone = order.customer.phone.replace(/[\s\-\+]/g,'');
+  const custPhoneIntl = custPhone.startsWith('0') ? '91'+custPhone.slice(1) : custPhone.startsWith('91') ? custPhone : '91'+custPhone;
+
+  const custMsg = encodeURIComponent(
+    `🍄 *Order Confirmed — ${FARM_NAME}*\n\n`+
+    `Hi ${order.customer.name}! Your order is confirmed. 🎉\n\n`+
+    `🆔 Order ID: *${order.orderId}*\n`+
+    `⏰ Time: ${order.datetime}\n\n`+
+    `🛒 *Your Order*\n`+
+    order.items.map(i=>`  • ${i.name} ×${i.qty} — ₹${(i.price*i.qty).toFixed(2)}`).join('\n')+
+    `\n\n💰 Total Paid: *₹${order.total.toFixed(2)}*\n`+
+    `💳 Via: ${order.payMethod}\n`+
+    `📍 Delivering to: ${order.customer.address}\n\n`+
+    `We will dispatch soon. For queries call/WhatsApp: +91 8106088075\n\n`+
+    `Thank you for choosing ${FARM_NAME}! 🌱`
+  );
+  setTimeout(()=>{
+    const custWin = window.open(`https://wa.me/${custPhoneIntl}?text=${custMsg}`, '_blank');
+    if(custWin){ setTimeout(()=>{ try{ custWin.close(); }catch(e){} }, 4000); }
+  }, 1800);
+
+  // ─── 4. IN-APP NOTIFICATION ───
+  const notif = document.getElementById('statusNotif');
+  document.getElementById('statusNotifBody').textContent =
+    `Order ${order.orderId} · ${order.customer.name} · ₹${order.total.toFixed(2)}`;
+  notif.classList.add('show');
+  setTimeout(()=> notif.classList.remove('show'), 10000);
+
+  showToast(`✅ Order confirmed! Owner & you have been notified.`);
+}
+
+// ══════════════════════════════════════════
+//  EXCEL DOWNLOAD
+// ══════════════════════════════════════════
+const ORDER_KEY = 'vorganic_orders_v4';
+function appendToOrderStore(order){
+  let existing = [];
+  try { existing = JSON.parse(localStorage.getItem(ORDER_KEY)||'[]'); } catch(e){}
+  existing.push({
+    orderId      : order.orderId,
+    datetime     : order.datetime,
+    customerName : order.customer.name,
+    phone        : order.customer.phone,
+    email        : order.customer.email,
+    address      : order.customer.address,
+    type         : order.customer.type,
+    items        : order.items.map(i=>`${i.name} ×${i.qty}`).join('; '),
+    total        : order.total,
+    payMethod    : order.payMethod,
+    status       : 'Paid'
+  });
+  try { localStorage.setItem(ORDER_KEY, JSON.stringify(existing)); } catch(e){}
+}
+
+function downloadExcel(){
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem(ORDER_KEY)||'[]'); } catch(e){}
+  if(!orders.length){ showToast('No orders to export!'); return; }
+  const wb = XLSX.utils.book_new();
+  const headers = ['Order ID','Date & Time','Customer Name','Phone','Email','Type','Items','Total (₹)','Payment','Status','Address'];
+  const rows = orders.map(o=>[o.orderId,o.datetime,o.customerName,o.phone,o.email||'—',o.type||'Individual',o.items,parseFloat(o.total).toFixed(2),o.payMethod,o.status||'Paid',o.address||'—']);
+  const ws = XLSX.utils.aoa_to_sheet([headers,...rows]);
+  ws['!cols']=[{wch:14},{wch:22},{wch:20},{wch:16},{wch:26},{wch:16},{wch:44},{wch:14},{wch:20},{wch:10},{wch:36}];
+  XLSX.utils.book_append_sheet(wb,ws,'Orders');
+  const totalRevenue = orders.reduce((s,o)=>s+parseFloat(o.total),0);
+  const summary=[['V-Organic Farms — Order Summary',''],['',''],['Total Orders',orders.length],['Total Revenue (₹)',totalRevenue.toFixed(2)],['Last Updated',new Date().toLocaleString('en-IN')],['',''],['Owner Phone','+91 '+FARM_PHONE],['Owner Email',FARM_EMAIL]];
+  const ws2=XLSX.utils.aoa_to_sheet(summary);
+  ws2['!cols']=[{wch:22},{wch:28}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Summary');
+  XLSX.writeFile(wb,`VOrganic_Orders_${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast('📊 Excel downloaded!');
+}
+
+// ══════════════════════════════════════════
+//  ENQUIRY FORM
+// ══════════════════════════════════════════
+function submitForm(e){
+  e.preventDefault();
+  const name    = document.getElementById('enqName').value;
+  const phone   = document.getElementById('enqPhone').value;
+  const variety = document.getElementById('enqVariety').value;
+  const qty     = document.getElementById('enqQty').value;
+  const notes   = document.getElementById('enqNotes').value;
+  const email   = document.getElementById('enqEmail').value;
+
+  // Send email to owner via EmailJS
+  if(EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY'){
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email:FARM_EMAIL, to_name:'V-Organic Farms Owner',
+      order_id:'ENQ-'+Date.now().toString().slice(-5),
+      datetime:new Date().toLocaleString('en-IN'),
+      cust_name:name, cust_phone:phone, cust_email:email||'—', cust_type:'Enquiry',
+      cust_address:'—', items_list:variety+' — '+qty, total_amount:'Enquiry',
+      pay_method:'—', message:notes||'—'
+    });
+  }
+
+  // Send WA to owner
+  const msg = encodeURIComponent(
+    `📋 *New Enquiry — ${FARM_NAME}*\n\n`+
+    `👤 Name: ${name}\n📱 Phone: ${phone}\n📧 Email: ${email||'—'}\n🍄 Variety: ${variety}\n`+
+    `📦 Quantity: ${qty}\n📝 Notes: ${notes||'—'}\n\nPlease follow up within 2 hours.`
+  );
+  const ownerWin = window.open(`https://wa.me/${FARM_PHONE}?text=${msg}`, '_blank');
+  if(ownerWin){ setTimeout(()=>{ try{ ownerWin.close(); }catch(e){} }, 3000); }
+
+  showToast('✅ Enquiry sent! We will call you within 2 hours.');
+}
+
+function subscribeNL(e){ e.preventDefault(); showToast('🎉 Subscribed! 10% off coupon coming your way.'); e.target.reset(); }
+
+// ══════════════════════════════════════════
+//  UI UTILITIES
+// ══════════════════════════════════════════
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function observeReveal(){
+  const els=document.querySelectorAll('.reveal,.reveal-l,.reveal-r');
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+  },{threshold:0.08,rootMargin:'0px 0px -36px 0px'});
+  els.forEach(el=>io.observe(el));
+}
+
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('navbar');
+  const st=document.getElementById('scrollTop');
+  if(window.scrollY>55) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+  if(window.scrollY>380) st.classList.add('vis'); else st.classList.remove('vis');
+});
+
+function toggleMob(){
+  const m=document.getElementById('mobMenu');
+  m.classList.toggle('open');
+  document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+}
+
+function animateCounters(){
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=parseInt(el.getAttribute('data-target'));
+    let current=0;
+    const step=target/60;
+    const timer=setInterval(()=>{
+      current=Math.min(current+step,target);
+      el.textContent=Math.round(current)+'+';
+      if(current>=target) clearInterval(timer);
+    },28);
+  });
+}
+
+// ─── LOADER ───
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('loader').classList.add('exit');
+    setTimeout(()=>{
+      document.getElementById('loader').style.display='none';
+      observeReveal();
+      animateCounters();
+    },1000);
+  },3000);
+});
+
+renderProducts();
+</script>
+</body>
+</html>
